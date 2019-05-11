@@ -1,0 +1,38 @@
+package br.edu.ifsc.ads.myfirstapplication;
+
+import android.database.Cursor;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
+public class MainActivity extends AppCompatActivity {
+
+   @Override
+   protected void onCreate(Bundle savedInstanceState) {
+       super.onCreate(savedInstanceState);
+       setContentView(R.layout.activity_main);
+       SQLiteDatabase bd;
+       bd = openOrCreateDatabase("banco", MODE_PRIVATE,null);
+
+       bd.execSQL("CREATE TABLE IF NOT EXISTS alunos (id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "nome VARCHAR,"+
+               "matricula LONG)");
+
+       bd.execSQL("DELETE FROM alunos");
+       bd.execSQL ("INSERT INTO alunos VALUES (1,'Larissa', 303)");
+       bd.execSQL ("INSERT INTO alunos VALUES (2,'Raquel', 345)");
+       bd.execSQL ("INSERT INTO alunos VALUES (3,'Fran', 385)");
+
+
+       Cursor cursor = bd.rawQuery("SELECT id, nome FROM alunos",  null);
+        cursor.moveToFirst();
+        do {
+            Log.i("registro", cursor.getString(1) +" "+
+                    Long.toString(cursor.getLong(cursor.getColumnIndex("nome"))) +" "+
+                    Long.toString(cursor.getLong(cursor.getColumnIndex("matricula")))
+            );
+        } while (cursor.moveToNext());
+   }
+}
+
